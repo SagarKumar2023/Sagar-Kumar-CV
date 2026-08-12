@@ -466,12 +466,13 @@ img {
 
 /* Hero Section */
 .hero {
-    min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     align-items: center;
     padding-top: var(--nav-h);
     background: radial-gradient(circle at 10% 20%, rgba(var(--primary-rgb), 0.03) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(var(--secondary-rgb), 0.03) 0%, transparent 40%);
+    overflow-x: hidden;
 }
 
 .hero-grid {
@@ -764,7 +765,7 @@ img {
 
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
     gap: 30px;
 }
 
@@ -891,7 +892,7 @@ img {
 /* Projects Categories */
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(380px, 100%), 1fr));
     gap: 32px;
     margin-bottom: 80px;
 }
@@ -1329,8 +1330,8 @@ img {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 300px;
-        height: 100vh;
+        width: min(300px, 85%);
+        height: 100dvh;
         background: var(--background);
         flex-direction: column;
         justify-content: center;
@@ -1347,8 +1348,10 @@ img {
 
     .hero { text-align: center; padding-bottom: 80px; }
     .hero-grid { grid-template-columns: 1fr; }
-    .hero-left { order: 2; align-items: center; }
-    .hero-right { order: 1; }
+    .hero-left { order: 2; align-items: center; width: 100%; }
+    .hero-right { order: 1; width: 100%; }
+    .hero-illustration { width: 100%; }
+    .float-icon { display: none; } /* Hide floating icons on mobile to prevent overflow */
     .hero-name { font-size: 56px; }
     .hero-typing { font-size: 28px; height: 40px; }
     .hero-desc { margin: 24px auto 40px; }
@@ -1369,9 +1372,9 @@ img {
 }
 
 @media (max-width: 576px) {
-    .hero-name { font-size: 48px; }
-    .section-title { font-size: 40px; }
-    .main-circle { width: 300px; height: 300px; }
+    .hero-name { font-size: clamp(32px, 10vw, 48px); }
+    .section-title { font-size: clamp(28px, 8vw, 40px); }
+    .main-circle { width: min(300px, 80vw); height: min(300px, 80vw); }
     .skills-grid { grid-template-columns: 1fr; }
     .about-stats { grid-template-columns: 1fr; }
     .projects-grid { grid-template-columns: 1fr; }
