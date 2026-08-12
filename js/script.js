@@ -82,22 +82,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // 4. Particles.js Configuration
-    particlesJS('particles-js', {
-        "particles": {
-            "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
-            "color": { "value": "#00F5FF" },
-            "shape": { "type": "circle" },
-            "opacity": { "value": 0.2, "random": true },
-            "size": { "value": 3, "random": true },
-            "line_linked": { "enable": true, "distance": 150, "color": "#00F5FF", "opacity": 0.1, "width": 1 },
-            "move": { "enable": true, "speed": 1.5, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
-        },
-        "interactivity": {
-            "detect_on": "canvas",
-            "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true }
-        },
-        "retina_detect": true
-    });
+    const initParticles = (color) => {
+        particlesJS('particles-js', {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": color },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.2, "random": true },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": color, "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 1.5, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true }
+            },
+            "retina_detect": true
+        });
+    };
+
+    // Initialize particles based on current theme
+    const currentThemeColor = document.body.classList.contains('light-theme') ? "#00B4D8" : "#00E5FF";
+    initParticles(currentThemeColor);
 
 
     // 5. Navbar Scroll Effect
@@ -146,15 +152,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // 7. Theme Toggle
+    // 7. Theme System (Persistence & System Preference)
     const themeToggle = document.getElementById('theme-toggle');
-    themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('light-theme');
-        const icon = themeToggle.querySelector('i');
-        if (document.body.classList.contains('light-theme')) {
+    const icon = themeToggle.querySelector('i');
+
+    // Function to set theme
+    const setTheme = (theme) => {
+        if (theme === 'light') {
+            document.body.classList.add('light-theme');
             icon.classList.replace('fa-moon', 'fa-sun');
+            localStorage.setItem('theme', 'light');
         } else {
+            document.body.classList.remove('light-theme');
             icon.classList.replace('fa-sun', 'fa-moon');
+            localStorage.setItem('theme', 'dark');
+        }
+    };
+
+    // Initialize Theme
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+
+    if (savedTheme === 'light' || (!savedTheme && systemPrefersLight)) {
+        setTheme('light');
+    } else {
+        setTheme('dark');
+    }
+
+    // Toggle Click Event
+    themeToggle.addEventListener('click', () => {
+        const isLight = document.body.classList.contains('light-theme');
+        setTheme(isLight ? 'dark' : 'light');
+    });
+
+    // Listen for System Changes
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', e => {
+        if (!localStorage.getItem('theme')) {
+            setTheme(e.matches ? 'light' : 'dark');
         }
     });
 
